@@ -12,7 +12,13 @@ angular.module('ngCordova.plugins.localNotification', [])
         // ----- "Scheduling" events
 
         // A local notification was scheduled
-        $window.cordova.plugins.notification.local.on('schedule', function (notification, state) {
+        $window.cordova.plugins.notification.local.on('add', function (notification, state) {
+          $timeout(function () {
+            $rootScope.$broadcast('$cordovaLocalNotification:add', notification, state);
+          });
+        });
+
+        $window.cordova.plugins.notification.local.on('add', function (notification, state) {
           $timeout(function () {
             $rootScope.$broadcast('$cordovaLocalNotification:schedule', notification, state);
           });
@@ -208,7 +214,7 @@ angular.module('ngCordova.plugins.localNotification', [])
         var q = $q.defer();
         scope = scope || null;
 
-        $window.cordova.plugins.notification.local.registerPermission(function (result) {
+        $window.cordova.plugins.notification.local.requestPermission(function (result) {
           if (result) {
             q.resolve(result);
           } else {
@@ -225,7 +231,7 @@ angular.module('ngCordova.plugins.localNotification', [])
         var q = $q.defer();
         scope = scope || null;
 
-        $window.cordova.plugins.notification.local.registerPermission(function (result) {
+        $window.cordova.plugins.notification.local.requestPermission(function (result) {
           if (result) {
             q.resolve(result);
           } else {
